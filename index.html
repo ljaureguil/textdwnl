@@ -1,49 +1,94 @@
-<head>
-    <meta name="viewport" content="width=device-width">
-    <script src='file:///android_asset/app.js'></script>
-</head>
-	
-	
+<html>
 <style>
-	body { background-color: #ffffff; }
-    .hello 
-    { 
-        font-size: 42; 
-        width: 100%;
-        margin-top: 2em;
-        text-align: center;
-        color: blue;
-    }
-    #text{
-        width:100%;
-        height:30%;
-    }
-    #res{
-        width:100%;
-        height:100%;
-    }
-</style>
-	
-	
-	
-	<textarea id="text"></textarea>
-	<br><br>
-File name
-<textarea id="n" >test</textarea><br>
-Extencion
-<textarea id="e" >txt</textarea><br>
+body{background:white;text-align:center;}
+textarea{
+    width:90%;
+    height:25%;
+    margin:10px;
+}
+button{
+    margin:10px;
+}
 
-<br>
-Pin:
-	<input id="pn" value=2 type="number"></input><br><br>
-	<button id="co" onclick="conv()">Convertir</button> . . . . . . . .	<button id="co" onclick="reg()">Regreso</button><br><br>
-<input type="button" id="dwn-btn" value="Download dinamically generated text file"/>
+</style>
 <br><br>
-	
-	
-<textarea id="res"></textarea>
-	
-<script>function download(filename, text) {
+<input id="pass"><br>
+original <textarea id="o"></textarea>
+<br>
+<button onclick="codif()">Codificar</button>
+<button onclick="decodif()">Decodificar</button>
+<button onclick="simplify()">Simplify</button>
+<br>
+Codificado <textarea id="c"></textarea>
+<button onclick="c.select();document.execCommand('copy');alert('copied to Clipboard')">Copy</button>
+<button onclick="dwnl()">Download File</button>
+<script>
+
+function dwnl(){
+var n=prompt("File Name?","MyFile")
+if(n===null) return;
+var e=prompt("Extension?","txt")
+if(e===null) return;
+download(c.value,n+"."+e);
+}
+function codif(){
+  cod(pass.value,o.value,function(res){
+      c.value=res;
+      });
+}
+
+function decodif(){
+      decod(pass.value,c.value,function(res){
+          o.value=res;
+          });
+}
+
+decod = function(clv, r,callback) {
+    var s = "";
+    for (var i = 0; i < r.length; i++) {
+        i--;
+        for (var ii = 0; ii < clv.length; ii++) {
+            i++;
+            var n1 = r.charCodeAt(i);
+            var n = n1 - clv.charCodeAt(ii);
+            s += String.fromCharCode(n);
+            if (i === r.length - 1) {
+                ii = clv.length;
+                i = r.length;
+            }
+        }
+    }
+    if(callback!=undefined) callback(s);
+    return s;
+}
+
+function cod(clv, r,callback) {
+    var s = "";
+    for (var i = 0; i < r.length; i++) {
+        var n = 0;
+        i--;
+        for (var ii = 0; ii < clv.length; ii++) {
+            i++;
+            n = r.charCodeAt(i);
+            n = n + clv.charCodeAt(ii);
+            s += String.fromCharCode(n);
+            if (i === r.length - 1) {
+                ii = clv.length;
+                i = r.length;
+            }
+        }
+    }
+    if(callback!=undefined) callback(s);
+    return s;
+}
+function simplify(tx){
+    
+    c.value=o.value.replace(/\n/g,"");
+
+
+}
+
+function download(filename, text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
@@ -56,51 +101,6 @@ Pin:
     document.body.removeChild(element);
 }
 
-// Start file download.
-document.getElementById("dwn-btn").addEventListener("click", function(){
-    // Generate download of hello.txt file with some content
-    var text =res.value;
-    var filename = n.value+"."+e.value;
-    
-    download(filename, text);
-}, false);
-	
-	function conv(){
-		convert(text.value,pn.value,function(r){
-			res.value=r;
-			
-		})
-		
-	}
-	
-	function reg(){
-		regreso(text.value,pn.value,function(r){
-			res.value=r;
-			
-		})
-		
-	}	
-	
-function convert(txt,p,callback) {
-var w  = "";
-  for (var i = 0; i < txt.length; i++) {
-      w+= txt[i].charCodeAt(0).toString(p) + ".";
-  }
-  if(callback!=undefined) callback(w.slice(0,-1))
-  return w.slice(0,-1);
-}
-
-function regreso(str,p,callback) {
- var ae=str.split(".").map(function(elem) {
-    return String.fromCharCode(parseInt(elem, p));
-  }).join("");
-
-  if(callback!=undefined) callback(ae.trim());
-       return ae
-}
-	
-	
 </script>
-
 
 </html>
