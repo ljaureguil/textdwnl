@@ -13,7 +13,7 @@ button{
 }
 
 </style>
-<br><br>
+<br><br>Password
 <input id="pass"><br>
 original <textarea id="o"></textarea>
 <br>
@@ -31,7 +31,7 @@ var n=prompt("File Name?","MyFile")
 if(n===null) return;
 var e=prompt("Extension?","txt")
 if(e===null) return;
-download(c.value,n+"."+e);
+download(o.value,n+"."+e);
 }
 function codif(){
   cod(pass.value,o.value,function(res){
