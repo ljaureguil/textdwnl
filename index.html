@@ -1,96 +1,41 @@
 <html>
-<meta name="viewport" content="width=device-width">
-
 <style>
-body{background:white;text-align:center;}
-textarea{
-    width:90%;
-    height:25%;
-    margin:10px;
+#resultado{
+	width:100%;
+	height:90%;
+	padding:10px;
 }
-button{
-    margin:10px;
-}
-
 </style>
-<br><br>Password
-<input id="pass"><br>
-original <textarea id="o"></textarea>
-<br>
-<button onclick="codif()">Codificar</button>
-<button onclick="decodif()">Decodificar</button>
-<button onclick="simplify()">Simplify</button>
-<br>
-Codificado <textarea id="c"></textarea>
-<button onclick="c.select();document.execCommand('copy');alert('copied to Clipboard')">Copy</button>
-<button onclick="dwnl()">Download File</button>
+<textarea id="resultado"></textarea>
+<button onclick="dwnl()">download</button>
+load <input id="txtfile" name="pdffile" type="file" multiple="multiple" oninput="convert3()"/>
+	
+	
+	<script src="ob.js"></script>
+
 <script>
+resultado.value=JSON.stringify(ob);
+var fechas=ob.fechas;
+var s="",td=0,c=0;
+for(var i=0;i<fechas.length;i++)
+{
+  var f=fechas[i];
+  var fa=f.fe.split("-")[0];;// && f.n.indexOf("any")>-1
+	if(fa==="2022"){
+    td+=f.de*1;c++
+    s+=f.fe+".......\n"+f.di+"..\nDep..."+f.de+"..\nnota..."+f.n+"\n\n"	;
+
+  } 
+}
+resultado.value=s+"\n\nTotal dep: "+td+"    obq: "+c;
 
 function dwnl(){
-var n=prompt("File Name?","MyFile")
+var n=prompt("File Name? (with extention)","MyFile.txt")
 if(n===null) return;
-var e=prompt("Extension?","txt")
-if(e===null) return;
-alert(o.value)
-download(o.value,n+"."+e);
-}
-function codif(){
-  cod(pass.value,o.value,function(res){
-      c.value=res;
-      });
-}
+if(n.indexOf(".")===-1) n=n+".txt"
 
-function decodif(){
-      decod(pass.value,c.value,function(res){
-          o.value=res;
-          });
+download(n,resultado.value);
 }
-
-decod = function(clv, r,callback) {
-    var s = "";
-    for (var i = 0; i < r.length; i++) {
-        i--;
-        for (var ii = 0; ii < clv.length; ii++) {
-            i++;
-            var n1 = r.charCodeAt(i);
-            var n = n1 - clv.charCodeAt(ii);
-            s += String.fromCharCode(n);
-            if (i === r.length - 1) {
-                ii = clv.length;
-                i = r.length;
-            }
-        }
-    }
-    if(callback!=undefined) callback(s);
-    return s;
-}
-
-function cod(clv, r,callback) {
-    var s = "";
-    for (var i = 0; i < r.length; i++) {
-        var n = 0;
-        i--;
-        for (var ii = 0; ii < clv.length; ii++) {
-            i++;
-            n = r.charCodeAt(i);
-            n = n + clv.charCodeAt(ii);
-            s += String.fromCharCode(n);
-            if (i === r.length - 1) {
-                ii = clv.length;
-                i = r.length;
-            }
-        }
-    }
-    if(callback!=undefined) callback(s);
-    return s;
-}
-function simplify(tx){
-    
-    c.value=o.value.replace(/\n/g,"");
-
-
-}
-
 function download(filename, text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -104,6 +49,20 @@ function download(filename, text) {
     document.body.removeChild(element);
 }
 
+	function convert3(){
+
+   var fr=new FileReader();
+     
+        fr.onload=function(){
+          result.value+="**Document: \n\n"+ fr.result;// splitby();
+       
+        }
+  
+         fr.readAsText(txtfile.files[0])//
+}
+	
+	
+	
 </script>
 
 </html>
