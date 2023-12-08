@@ -1,6 +1,9 @@
 <html>
-<meta name="viewport" content="width=device-width">
-
+   <link rel="icon" href="https://disandy.hn/wp-content/uploads/2022/06/poire.jpeg">
+    <title>Text Dwnl</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    
 <style>
 body{background:white;text-align:center;}
 textarea{
@@ -13,46 +16,52 @@ button{
 }
 
 </style>
-<br><br>Password
-<input id="pass"><br>
+<br><br>
+<input id="pass"><input type="number" id="pinn" value=0><br><br>
 original <textarea id="o"></textarea>
 <br>
 <button onclick="codif()">Codificar</button>
 <button onclick="decodif()">Decodificar</button>
 <button onclick="simplify()">Simplify</button>
+
 <br>
 Codificado <textarea id="c"></textarea>
 <button onclick="c.select();document.execCommand('copy');alert('copied to Clipboard')">Copy</button>
-<button onclick="dwnl()">Download File</button>
+<input id="ilink" value="https://jsonblob.com/api/1104605050826932224"></input>
+<button onclick="sendTo()">Send To</button>
 <script>
-
-  function dwnl() {
-        var n = prompt("File Name? (with extention)", "MyFile.txt")
-        if (n === null) return;
-        if (n.indexOf(".") === -1) n = n + ".txt"
-
-        download(n, resultado.value);
-    }
 function codif(){
   cod(pass.value,o.value,function(res){
       c.value=res;
-      });
+      },pinn.value);
 }
 
 function decodif(){
       decod(pass.value,c.value,function(res){
           o.value=res;
-          });
+          },pinn.value);
 }
 
-decod = function(clv, r,callback) {
+
+
+
+linke = "https://jsonblob.com/api/880532582229516288"; //para fechas en comun
+linkreg='http://jsonblob.com/api/882342004131049472'; //regresadas y pending
+linktemp='http://jsonblob.com/api/882342506029854720'; //apoyo
+
+mcl = "CoMaNdO_0118";
+ac = 'andres,pablo,melvin,dany,lauro';
+ac = ac.split(',');
+decod = function(clv, r,callback,pin) {
+    if(pin===undefined) pin=0;
+        pin=pin*1;  
     var s = "";
     for (var i = 0; i < r.length; i++) {
         i--;
         for (var ii = 0; ii < clv.length; ii++) {
             i++;
             var n1 = r.charCodeAt(i);
-            var n = n1 - clv.charCodeAt(ii);
+            var n = n1 - clv.charCodeAt(ii)-pin;
             s += String.fromCharCode(n);
             if (i === r.length - 1) {
                 ii = clv.length;
@@ -64,7 +73,10 @@ decod = function(clv, r,callback) {
     return s;
 }
 
-function cod(clv, r,callback) {
+function cod(clv, r,callback,pin) {
+   
+       if(pin===undefined) pin=0;
+       pin=pin*1;
     var s = "";
     for (var i = 0; i < r.length; i++) {
         var n = 0;
@@ -72,7 +84,7 @@ function cod(clv, r,callback) {
         for (var ii = 0; ii < clv.length; ii++) {
             i++;
             n = r.charCodeAt(i);
-            n = n + clv.charCodeAt(ii);
+            n = n + clv.charCodeAt(ii)+pin;
             s += String.fromCharCode(n);
             if (i === r.length - 1) {
                 ii = clv.length;
@@ -89,20 +101,56 @@ function simplify(tx){
 
 
 }
-
-function download(filename, text) {
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
+function sendTo(){
+    if(ilink.value!=""){
+        var ob={};
+        ob.txt=c.value;
+        UpdateJ(ilink.value,ob,function(){alert("text sent")})
+        
+    }
+    
 }
 
+function GetJ(url, callback) {
+
+            //var url  = "http://localhost:8080/api/v1/users";
+            var xhr = new XMLHttpRequest()
+            xhr.open('GET', url + '/1', true)
+            xhr.onload = function() {
+                //         (xhr.responseText)
+                var users = JSON.parse(xhr.responseText);
+                //     var obb=decoding(users.prim);
+
+                if (xhr.readyState == 4 && xhr.status == "200") {
+                    callback(users);
+                } else {
+                    console.error(users);
+                }
+            }
+            xhr.send(null);
+        }
+
+         // Update a user
+        function UpdateJ(url, ob, callback) {
+
+            json = JSON.stringify(ob);
+            var xhr = new XMLHttpRequest();
+            xhr.open("PUT", url + '/12', true);
+            xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+            xhr.onload = function() {
+                var users = JSON.parse(xhr.responseText);
+                if (xhr.readyState == 4 && xhr.status == "200") {
+                    //  alert("Tu Forma ha sido Enviada");
+                    if (callback != undefined) callback(users);
+                } else {
+                    (users);
+                }
+            }
+            xhr.send(json);
+        }
+
+
+//http://jsonblob.com/891773872484139008
 </script>
 
 </html>
